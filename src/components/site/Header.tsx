@@ -109,7 +109,7 @@ export default function Header() {
       >
         {/* Announcement bar, as on the live site */}
         <div className="relative flex h-[var(--bar-h)] items-center overflow-hidden bg-[linear-gradient(90deg,#581ee3,#7446f0_55%,#6a5cff)] text-[0.78rem] font-medium text-white">
-          <div className="container-site hidden items-center justify-between md:flex">
+          <div className="container-site hidden items-center justify-between lg:flex">
             <ul className="flex items-center gap-7">
               {announcement.map((item, i) => (
                 <li key={item} className="flex items-center gap-2">
@@ -125,7 +125,7 @@ export default function Header() {
               {site.email}
             </a>
           </div>
-          <div className="marquee flex w-full md:hidden" aria-label={announcement.join(", ")}>
+          <div className="marquee flex w-full lg:hidden" aria-label={announcement.join(", ")}>
             <div className="marquee-track flex shrink-0 gap-10 pr-10 [--marquee-duration:22s]" aria-hidden="true">
               {[...announcement, site.email, ...announcement, site.email].map((item, i) => (
                 <span key={i} className="whitespace-nowrap">

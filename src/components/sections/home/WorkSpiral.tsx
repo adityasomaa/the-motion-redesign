@@ -19,7 +19,7 @@ export default function WorkSpiral() {
               Video examples <span className="text-grad">that show our capabilities</span>
             </>
           }
-          lead="Scroll or swipe through the spiral. Every frame is from a project we delivered."
+          lead="A selection of recent videos made for clients like HackerRank, Apollo.io, Attio and Venly."
         />
         <Reveal>
           <a href={site.showreel} target="_blank" rel="noopener noreferrer" data-cursor="Play" className="group flex items-center gap-4">

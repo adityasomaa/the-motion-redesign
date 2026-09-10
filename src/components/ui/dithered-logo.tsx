@@ -392,6 +392,14 @@ const drawParticles = (
   ctx.globalAlpha = 1;
 };
 
+/** Layout size (ignores CSS transforms such as intro scale), plus the factor to map pointer coordinates into it. */
+const layoutRect = (el: HTMLElement) => {
+  const r = el.getBoundingClientRect();
+  const width = el.clientWidth || r.width;
+  const height = el.clientHeight || r.height;
+  return { left: r.left, top: r.top, width, height, sx: width / (r.width || width), sy: height / (r.height || height) };
+};
+
 export interface DitheredLogoProps {
   imageSrc: string;
   gridSize?: number;
@@ -471,7 +479,7 @@ export function DitheredLogo({
         return;
       }
 
-      const rect = canvas.getBoundingClientRect();
+      const rect = layoutRect(canvas);
       const needsMore = stepParticles(
         sys,
         cursorRef.current.x,
@@ -507,7 +515,7 @@ export function DitheredLogo({
 
       try {
         const img = await fetchImage(src);
-        const rect = canvas.getBoundingClientRect();
+        const rect = layoutRect(canvas);
         const processed = toGrayscaleGrid(img, gridSize, contrast, gamma, blur);
         const { width: gridW, height: gridH } = processed;
 
@@ -615,7 +623,7 @@ export function DitheredLogo({
     let lastH = 0;
 
     const handleResize = () => {
-      const rect = canvas.getBoundingClientRect();
+      const rect = layoutRect(canvas);
       const dpr = window.devicePixelRatio || 1;
       canvas.width = Math.max(1, Math.round(rect.width * dpr));
       canvas.height = Math.max(1, Math.round(rect.height * dpr));
@@ -643,9 +651,9 @@ export function DitheredLogo({
     };
 
     const onPointerMove = (event: PointerEvent) => {
-      const rect = canvas.getBoundingClientRect();
-      cursorRef.current.x = event.clientX - rect.left;
-      cursorRef.current.y = event.clientY - rect.top;
+      const rect = layoutRect(canvas);
+      cursorRef.current.x = (event.clientX - rect.left) * rect.sx;
+      cursorRef.current.y = (event.clientY - rect.top) * rect.sy;
       cursorRef.current.active = true;
       startLoop();
     };
@@ -662,10 +670,10 @@ export function DitheredLogo({
     };
 
     const onPointerUp = (event: PointerEvent) => {
-      const rect = canvas.getBoundingClientRect();
+      const rect = layoutRect(canvas);
       ripplesRef.current.push({
-        x: event.clientX - rect.left,
-        y: event.clientY - rect.top,
+        x: (event.clientX - rect.left) * rect.sx,
+        y: (event.clientY - rect.top) * rect.sy,
         start: performance.now(),
       });
 
@@ -675,12 +683,7 @@ export function DitheredLogo({
 
     handleResize();
     const resizeObserver = new ResizeObserver(handleResize);
-    const themeObserver = new MutationObserver(() => handleResize());
     resizeObserver.observe(canvas);
-    themeObserver.observe(document.documentElement, {
-      attributes: true,
-      attributeFilter: ["class", "style"],
-    });
     canvas.addEventListener("pointermove", onPointerMove);
     canvas.addEventListener("pointerleave", onPointerLeave);
     canvas.addEventListener("pointercancel", onPointerCancel);
@@ -691,7 +694,6 @@ export function DitheredLogo({
       runningRef.current = false;
       if (resizeTimer) clearTimeout(resizeTimer);
       resizeObserver.disconnect();
-      themeObserver.disconnect();
       canvas.removeEventListener("pointermove", onPointerMove);
       canvas.removeEventListener("pointerleave", onPointerLeave);
       canvas.removeEventListener("pointercancel", onPointerCancel);

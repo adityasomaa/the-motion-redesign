@@ -34,7 +34,7 @@ export default function CtaBand({ title, lead }: { title: ReactNode; lead?: stri
                 </Button>
               </Reveal>
             </div>
-            <Reveal as="ul" className="grid content-end gap-px self-end overflow-hidden rounded-2xl border border-white/10 bg-white/10 sm:grid-cols-2">
+            <Reveal as="ul" className="grid gap-px self-center overflow-hidden rounded-2xl border border-white/10 bg-white/10 sm:grid-cols-2">
               {guarantees.map((g) => (
                 <li key={g.title} data-reveal className="flex flex-col gap-2 bg-[#110a26]/90 p-6">
                   <span className="text-base font-semibold">{g.title}</span>

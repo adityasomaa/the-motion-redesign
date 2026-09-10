@@ -22,7 +22,7 @@ export default function SizzleProcess() {
   const nodes = sizzle.process.map((p, i) => ({
     id: p.id,
     x: compact ? 150 : 90 + i * 250,
-    y: compact ? 50 + i * 140 : 110,
+    y: compact ? 53 + i * 135 : 88,
     label: p.title,
     size: "lg" as const,
     icon: <Icon d={icons[i]!} />,

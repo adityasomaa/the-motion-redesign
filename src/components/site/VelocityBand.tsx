@@ -15,7 +15,7 @@ export default function VelocityBand({ text, className }: { text: string; classN
     >
       <ScrollBasedVelocity
         text={text}
-        default_velocity={2}
+        default_velocity={0.9}
         className="text-[clamp(2.75rem,1.5rem+6vw,7.5rem)] font-semibold leading-[1.08] tracking-[-0.045em]"
       />
     </div>

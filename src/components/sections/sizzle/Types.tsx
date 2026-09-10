@@ -4,40 +4,62 @@ import { useRef, useState } from "react";
 import SectionHead from "@/components/site/SectionHead";
 import { WheelCarousel } from "@/components/ui/wheel-carousel";
 import { sizzle } from "@/lib/content";
-import { gsap, useGSAP } from "@/lib/gsap";
-import { prefersReducedMotion } from "@/lib/utils";
+import { gsap, ScrollTrigger, useGSAP } from "@/lib/gsap";
+import { getLenis } from "@/lib/runtime";
 import { useMedia } from "@/lib/useMedia";
+import { prefersReducedMotion } from "@/lib/utils";
 
 /**
- * On desktop the page scroll turns the wheel (pinned), so the mouse wheel is never trapped.
- * On touch screens it's drag, arrow buttons or keyboard.
+ * Desktop: the section pins and page scroll turns the wheel continuously (no jumps between types).
+ * Touch: swipe sideways on the wheel, or use the arrows; vertical swipes keep scrolling the page.
  */
 export default function Types() {
   const root = useRef<HTMLElement>(null);
+  const trigger = useRef<ScrollTrigger | null>(null);
+  const progress = useRef<number | null>(null);
   const [active, setActive] = useState(0);
   const n = sizzle.types.length;
   const compact = useMedia("(max-width: 767px)");
+  const desktop = useMedia("(min-width: 1025px)");
+  const touch = useMedia("(pointer: coarse)");
 
   useGSAP(
     () => {
       if (prefersReducedMotion()) return;
       const mm = gsap.matchMedia();
       mm.add("(min-width: 1025px)", () => {
-        gsap.timeline({
-          scrollTrigger: {
-            trigger: root.current,
-            start: "top top",
-            end: `+=${n * 55}%`,
-            pin: true,
-            scrub: true,
-            onUpdate: (self) => setActive(Math.min(n - 1, Math.round(self.progress * (n - 1)))),
+        trigger.current = ScrollTrigger.create({
+          trigger: root.current,
+          start: "top top",
+          end: `+=${n * 45}%`,
+          pin: true,
+          invalidateOnRefresh: true,
+          onUpdate: (self) => {
+            progress.current = self.progress * (n - 1);
           },
         });
+        return () => {
+          trigger.current = null;
+          progress.current = null;
+        };
       });
       return () => mm.revert();
     },
     { scope: root },
   );
+
+  const go = (index: number) => {
+    const next = (index + n) % n;
+    const st = trigger.current;
+    if (desktop && st) {
+      const y = st.start + (next / (n - 1)) * (st.end - st.start);
+      const lenis = getLenis();
+      if (lenis) lenis.scrollTo(y, { duration: 1.1 });
+      else window.scrollTo({ top: y, behavior: "smooth" });
+      return;
+    }
+    setActive(next);
+  };
 
   return (
     <section ref={root} className="relative overflow-hidden py-20 lg:flex lg:h-svh lg:items-center lg:py-0">
@@ -56,7 +78,7 @@ export default function Types() {
             <button
               type="button"
               aria-label="Previous type"
-              onClick={() => setActive((a) => (a - 1 + n) % n)}
+              onClick={() => go(active - 1)}
               className="flex h-12 w-12 items-center justify-center rounded-full border border-white/20 transition-colors hover:border-white/60"
             >
               <svg width="14" height="14" viewBox="0 0 16 16" aria-hidden="true">
@@ -66,7 +88,7 @@ export default function Types() {
             <button
               type="button"
               aria-label="Next type"
-              onClick={() => setActive((a) => (a + 1) % n)}
+              onClick={() => go(active + 1)}
               className="flex h-12 w-12 items-center justify-center rounded-full border border-white/20 transition-colors hover:border-white/60"
             >
               <svg width="14" height="14" viewBox="0 0 16 16" aria-hidden="true">
@@ -79,12 +101,12 @@ export default function Types() {
           </div>
         </div>
 
-        <div className="h-[19rem] overflow-hidden rounded-[1.75rem] border border-white/10 sm:h-[30rem] lg:h-[34rem]">
+        <div className="h-[19rem] sm:h-[30rem] lg:h-[34rem]">
           <WheelCarousel
             items={sizzle.types}
             mode="custom"
-            background="#0d0a1c"
-            panelColor="#130a29"
+            background="transparent"
+            panelColor="transparent"
             textColor="rgba(255,255,255,0.32)"
             selectedColor="#ffffff"
             markerColor="#ff0a96"
@@ -101,7 +123,9 @@ export default function Types() {
             markerSize={compact ? 10 : 16}
             markerGap={compact ? 10 : 20}
             scrollSpeed={0}
-            activeIndex={active}
+            dragAxis={touch ? "x" : "y"}
+            progressRef={desktop ? progress : undefined}
+            activeIndex={desktop ? undefined : active}
             onActiveChange={(_, i) => setActive(i)}
             itemClassName="text-[clamp(0.95rem,0.8rem+1.2vw,2rem)] font-semibold"
             className="h-full min-h-0"

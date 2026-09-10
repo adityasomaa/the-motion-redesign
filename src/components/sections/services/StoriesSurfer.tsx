@@ -23,9 +23,6 @@ export default function StoriesSurfer() {
                   Many of these are partnerships that lasted months and helped clients launch, raise investment or completely pivot.
                 </p>
               </div>
-              <span className="mt-2 hidden shrink-0 rounded-full border border-white/15 px-3 py-1 font-mono text-xs uppercase tracking-wider text-white/60 sm:block">
-                Scroll to surf
-              </span>
             </div>
           </div>
         }

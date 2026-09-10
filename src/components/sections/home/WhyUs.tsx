@@ -66,9 +66,6 @@ export default function WhyUs() {
                 </span>
               </figcaption>
             </PixelImageTrail>
-            <span className="pointer-events-none absolute right-4 top-4 rounded-full border border-white/10 bg-void/60 px-3 py-1 text-[0.65rem] uppercase tracking-[0.3em] text-white/60 backdrop-blur">
-              Move to reveal
-            </span>
           </figure>
         </Reveal>
       </div>

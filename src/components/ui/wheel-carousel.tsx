@@ -5,6 +5,7 @@ import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import {
   type KeyboardEvent,
   type PointerEvent,
+  type RefObject,
   useCallback,
   useEffect,
   useId,
@@ -53,6 +54,10 @@ export interface WheelCarouselProps {
   initialIndex?: number;
   activeIndex?: number;
   onActiveChange?: (item: WheelCarouselItem, index: number) => void;
+  /** Continuous index (0..items-1) read every frame, e.g. from page scroll. The wheel follows it smoothly. */
+  progressRef?: RefObject<number | null>;
+  /** Drag direction. "x" keeps vertical touch swipes scrolling the page. */
+  dragAxis?: "x" | "y";
   className?: string;
   photoClassName?: string;
   itemClassName?: string;
@@ -138,6 +143,8 @@ export function WheelCarousel({
   initialIndex = 0,
   activeIndex,
   onActiveChange,
+  progressRef,
+  dragAxis = "y",
   className,
   photoClassName,
   itemClassName,
@@ -160,6 +167,8 @@ export function WheelCarousel({
   const dragOriginRef = useRef({ y: 0, rotation: startingIndex });
   const previousDragRotationRef = useRef(startingIndex);
   const frameRef = useRef<number | null>(null);
+  const targetRef = useRef<number | null>(null);
+  const suppressChangeRef = useRef(false);
 
   useEffect(() => {
     const normalizedIndex = wrapIndex(selectedRef.current, itemCount);
@@ -215,7 +224,7 @@ export function WheelCarousel({
       if (nextIndex !== selectedRef.current) {
         selectedRef.current = nextIndex;
         setSelectedIndex(nextIndex);
-        onActiveChange?.(carouselItems[nextIndex]!, nextIndex);
+        if (!suppressChangeRef.current) onActiveChange?.(carouselItems[nextIndex]!, nextIndex);
       }
     },
     [carouselItems, itemCount, onActiveChange],
@@ -229,6 +238,19 @@ export function WheelCarousel({
 
     const tick = () => {
       let keepAnimating = false;
+
+      if (!draggingRef.current && targetRef.current !== null) {
+        const delta = targetRef.current - rotationRef.current;
+        if (Math.abs(delta) > 0.002 && !reduceMotion) {
+          commitRotation(rotationRef.current + delta * 0.14);
+          frameRef.current = requestAnimationFrame(tick);
+          return;
+        }
+        commitRotation(targetRef.current);
+        targetRef.current = null;
+        suppressChangeRef.current = false;
+        velocityRef.current = 0;
+      }
 
       if (!draggingRef.current && Math.abs(velocityRef.current) > 0.0008) {
         commitRotation(rotationRef.current + velocityRef.current);
@@ -287,13 +309,37 @@ export function WheelCarousel({
     if (appliedActiveIndexRef.current === controlledIndex) return;
     appliedActiveIndexRef.current = controlledIndex;
     const currentIndex = wrapIndex(Math.round(rotationRef.current), itemCount);
+    if (currentIndex === controlledIndex) return;
     let delta = controlledIndex - currentIndex;
     if (delta > itemCount / 2) delta -= itemCount;
     if (delta < -itemCount / 2) delta += itemCount;
-    selectedRef.current = controlledIndex;
-    setSelectedIndex(controlledIndex);
-    commitRotationRef.current(rotationRef.current + delta);
-  }, [activeIndex, itemCount]);
+    // animate there instead of jumping, without reporting the types it passes on the way
+    suppressChangeRef.current = true;
+    targetRef.current = Math.round(rotationRef.current) + delta;
+    runAnimation();
+  }, [activeIndex, itemCount, runAnimation]);
+
+  useEffect(() => {
+    if (!progressRef) return;
+    let raf = 0;
+    let last: number | null = null;
+    let following = false;
+    const loop = () => {
+      const p = progressRef.current;
+      if (p !== null && p !== last) {
+        following = true;
+        last = p;
+      }
+      if (following && p !== null && !draggingRef.current) {
+        const delta = shortestOffset(p, rotationRef.current, itemCount);
+        if (Math.abs(delta) > 0.0005) commitRotationRef.current(rotationRef.current + delta * 0.12);
+        else following = false;
+      }
+      raf = requestAnimationFrame(loop);
+    };
+    raf = requestAnimationFrame(loop);
+    return () => cancelAnimationFrame(raf);
+  }, [progressRef, itemCount]);
 
   const moveBy = (amount: number) => {
     velocityRef.current = 0;
@@ -306,14 +352,14 @@ export function WheelCarousel({
     draggingRef.current = true;
     setIsDragging(true);
     velocityRef.current = 0;
-    dragOriginRef.current = { y: event.clientY, rotation: rotationRef.current };
+    dragOriginRef.current = { y: dragAxis === "x" ? event.clientX : event.clientY, rotation: rotationRef.current };
     previousDragRotationRef.current = rotationRef.current;
     event.currentTarget.setPointerCapture(event.pointerId);
   };
 
   const handlePointerMove = (event: PointerEvent<HTMLDivElement>) => {
     if (!draggingRef.current) return;
-    const distance = event.clientY - dragOriginRef.current.y;
+    const distance = (dragAxis === "x" ? event.clientX : event.clientY) - dragOriginRef.current.y;
     const nextRotation = dragOriginRef.current.rotation - distance * dragSpeed;
     velocityRef.current = nextRotation - previousDragRotationRef.current;
     previousDragRotationRef.current = nextRotation;
@@ -383,7 +429,8 @@ export function WheelCarousel({
         }
         tabIndex={0}
         className={cn(
-          "flex h-full w-full touch-none select-none items-stretch overflow-hidden outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-current",
+          "flex h-full w-full select-none items-stretch overflow-hidden outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-current",
+          dragAxis === "x" ? "touch-pan-y" : "touch-none",
           photoSide === "right" && "flex-row-reverse",
           isDragging ? "cursor-grabbing" : "cursor-grab",
         )}

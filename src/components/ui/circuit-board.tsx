@@ -57,6 +57,8 @@ function CircuitBoard({
   className,
   ...props
 }: CircuitBoardProps) {
+  // user-space filter + unique ids: bounding-box filters collapse to nothing on perfectly straight traces
+  const uid = React.useId().replace(/[^a-zA-Z0-9_-]/g, "")
   // Theme-aware color defaults
   const [isDark, setIsDark] = React.useState(true)
 
@@ -184,7 +186,7 @@ function CircuitBoard({
       >
         <defs>
           {/* Glow filter for the pulse effect */}
-          <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+          <filter id={`glow-${uid}`} filterUnits="userSpaceOnUse" x={-60} y={-60} width={width + 120} height={height + 120}>
             <feGaussianBlur stdDeviation="3" result="coloredBlur" />
             <feMerge>
               <feMergeNode in="coloredBlur" />
@@ -195,7 +197,7 @@ function CircuitBoard({
           {/* Grid pattern */}
           {showGrid && (
             <pattern
-              id="circuitGrid"
+              id={`circuitGrid-${uid}`}
               width={gridSize}
               height={gridSize}
               patternUnits="userSpaceOnUse"
@@ -222,7 +224,7 @@ function CircuitBoard({
 
         {/* Grid background */}
         {showGrid && (
-          <rect width={width} height={height} fill="url(#circuitGrid)" />
+          <rect width={width} height={height} fill={`url(#circuitGrid-${uid})`} />
         )}
 
         {/* Connection traces */}
@@ -258,7 +260,7 @@ function CircuitBoard({
                   strokeWidth={traceWidth + 2}
                   strokeLinecap="round"
                   strokeLinejoin="round"
-                  filter="url(#glow)"
+                  filter={`url(#glow-${uid})`}
                   strokeDasharray={`${pathLength * 0.1} ${pathLength * 0.9}`}
                   initial={{ strokeDashoffset: pathLength }}
                   animate={{ strokeDashoffset: -pathLength }}
@@ -280,7 +282,7 @@ function CircuitBoard({
                   strokeWidth={traceWidth + 2}
                   strokeLinecap="round"
                   strokeLinejoin="round"
-                  filter="url(#glow)"
+                  filter={`url(#glow-${uid})`}
                   strokeDasharray={`${pathLength * 0.1} ${pathLength * 0.9}`}
                   initial={{ strokeDashoffset: -pathLength }}
                   animate={{ strokeDashoffset: pathLength }}

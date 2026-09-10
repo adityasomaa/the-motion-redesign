@@ -19,7 +19,7 @@ export default function HomeServices() {
                 Our animation <span className="text-grad">and design services</span>
               </>
             }
-            lead="Hover a card, or tap it on a phone, to see what each one is for."
+            lead="Motion graphics, animation and video, each one shaped around your brand and your audience."
           />
           <Reveal>
             <Button href="/services" variant="secondary" icon={<ArrowIcon />}>

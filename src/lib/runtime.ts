@@ -40,3 +40,18 @@ export function onRevealed(fn: () => void) {
   listeners.add(fn);
   return () => listeners.delete(fn);
 }
+
+/** Run `fn` once when `el` first becomes visible. Independent of layout measurements. Returns a cleanup. */
+export function onVisible(el: Element, fn: () => void, rootMargin = "0px 0px -8% 0px") {
+  const io = new IntersectionObserver(
+    (entries) => {
+      if (entries.some((e) => e.isIntersecting)) {
+        io.disconnect();
+        fn();
+      }
+    },
+    { rootMargin, threshold: 0 },
+  );
+  io.observe(el);
+  return () => io.disconnect();
+}

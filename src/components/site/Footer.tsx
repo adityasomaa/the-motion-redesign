@@ -32,7 +32,7 @@ export default function Footer() {
     if (!bigRef.current || prefersReducedMotion()) return;
     const split = SplitText.create(bigRef.current, { type: "chars", charsClass: "inline-block will-change-transform" });
     gsap.from(split.chars, {
-      yPercent: 110,
+      yPercent: 135,
       rotate: 8,
       opacity: 0,
       stagger: 0.03,
@@ -119,7 +119,7 @@ export default function Footer() {
         <p
           ref={bigRef}
           aria-hidden="true"
-          className="mt-24 select-none overflow-hidden whitespace-nowrap text-center text-[clamp(2.75rem,11.5vw,11rem)] font-extrabold leading-[0.9] tracking-[-0.05em] text-grad"
+          className="mt-24 select-none overflow-hidden whitespace-nowrap pb-[0.22em] text-center text-[clamp(2.75rem,11.5vw,11rem)] font-extrabold leading-[0.9] tracking-[-0.05em] text-grad"
         >
           Make your brand move
         </p>

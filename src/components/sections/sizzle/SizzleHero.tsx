@@ -6,24 +6,25 @@ import { Reveal, SplitHeading } from "@/components/site/Motion";
 import { AsciiEffect } from "@/components/ui/ascii-effect";
 import { cta } from "@/lib/content";
 
+/** One screen tall on every device; the ASCII artwork takes the space left on stacked layouts. */
 export default function SizzleHero() {
   return (
-    <section className="relative overflow-hidden pb-16 pt-[calc(var(--bar-h)+var(--header-h)+3rem)] md:pb-24 lg:pt-[calc(var(--bar-h)+var(--header-h)+4.5rem)]">
+    <section className="relative flex h-svh min-h-[34rem] flex-col overflow-hidden pt-[calc(var(--bar-h)+var(--header-h))]">
       <div
         aria-hidden="true"
         className="pointer-events-none absolute inset-0"
         style={{ background: "radial-gradient(50rem 36rem at 80% 30%, rgba(255,19,187,.16), transparent 65%), radial-gradient(44rem 30rem at 0% 90%, rgba(90,85,255,.22), transparent 70%)" }}
       />
-      <div className="container-site relative grid items-center gap-14 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)]">
-        <div className="flex flex-col gap-7">
+      <div className="container-site relative flex min-h-0 flex-1 flex-col gap-5 py-5 wide:grid wide:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)] wide:items-center wide:gap-14 wide:py-8">
+        <div className="flex shrink-0 flex-col gap-4 sm:gap-5 wide:gap-6">
           <Reveal intro>
             <p className="eyebrow">Sizzle reel services</p>
           </Reveal>
-          <SplitHeading as="h1" intro className="display-1 max-w-[13ch] text-balance">
+          <SplitHeading as="h1" intro className="display-hero max-w-[13ch] text-balance">
             Sizzle reels that <span className="text-grad">showcase your brand</span>
           </SplitHeading>
           <Reveal intro delay={0.2}>
-            <p className="lead max-w-xl">
+            <p className="lead-hero max-w-xl">
               We work with brands, marketing managers, startups and marketing agencies to produce memorable and unexpected video ads that get results.
             </p>
           </Reveal>
@@ -35,8 +36,8 @@ export default function SizzleHero() {
           </Reveal>
         </div>
 
-        <Reveal intro delay={0.15}>
-          <div className="relative aspect-[689/444] w-full overflow-hidden rounded-[1.5rem] border border-white/10 bg-void shadow-[0_40px_120px_-30px_rgba(226,37,255,.45)]">
+        <Reveal intro delay={0.15} className="hero-media">
+          <div className="absolute inset-0 overflow-hidden rounded-[1.5rem] border border-white/10 bg-void shadow-[0_40px_120px_-30px_rgba(226,37,255,.45)]">
             <LazyMount className="absolute inset-0" rootMargin="0px">
               <AsciiEffect
                 imageSrc="/img/posters/superodd-boundless-reel.webp"
@@ -54,10 +55,6 @@ export default function SizzleHero() {
                 className="h-full w-full"
               />
             </LazyMount>
-            <div className="pointer-events-none absolute bottom-4 left-4 flex items-center gap-3 rounded-xl border border-white/10 bg-void/70 p-2 pr-4 backdrop-blur">
-              <img src="/img/posters/superodd-boundless-reel.webp" alt="" className="h-10 w-16 rounded-md object-cover" />
-              <span className="text-xs uppercase tracking-[0.25em] text-white/65">Move to distort</span>
-            </div>
           </div>
         </Reveal>
       </div>

@@ -16,11 +16,11 @@ const Icon = ({ d }: { d: string }) => (
 );
 
 const wideNodes = [
-  { id: "brief", x: 70, y: 190, label: "Your brief", size: "lg" as const, icon: <Icon d="M4 1.5h5l3 3v10H4zM9 1.5v3h3M6 8h4M6 11h4" /> },
-  { id: "figma", x: 260, y: 80, label: "Figma", icon: <Icon d="M6 1.5h4a2 2 0 010 4H6a2 2 0 010-4zM6 5.5h4a2 2 0 010 4H6a2 2 0 010-4zM6 9.5a2 2 0 102 2v-2" /> },
-  { id: "ae", x: 260, y: 300, label: "After Effects", icon: <Icon d="M2 13l3.5-10h1L10 13M3.3 9.5h4.4M11.5 8.5c0-1 .7-1.8 1.7-1.8S15 7.5 15 8.5H11.5c0 1.2.8 2 1.9 2" /> },
-  { id: "blender", x: 450, y: 190, label: "Blender", icon: <Icon d="M8 14.5a4.5 4.5 0 100-9 4.5 4.5 0 000 9zM8 11.5a1.5 1.5 0 100-3 1.5 1.5 0 000 3zM3.5 10L1 6.5h5.5" /> },
-  { id: "video", x: 600, y: 190, label: "Your video", size: "lg" as const, icon: <Icon d="M5 3.5l8 4.5-8 4.5z" /> },
+  { id: "brief", x: 70, y: 188, label: "Your brief", size: "lg" as const, icon: <Icon d="M4 1.5h5l3 3v10H4zM9 1.5v3h3M6 8h4M6 11h4" /> },
+  { id: "figma", x: 260, y: 78, label: "Figma", icon: <Icon d="M6 1.5h4a2 2 0 010 4H6a2 2 0 010-4zM6 5.5h4a2 2 0 010 4H6a2 2 0 010-4zM6 9.5a2 2 0 102 2v-2" /> },
+  { id: "ae", x: 260, y: 298, label: "After Effects", icon: <Icon d="M2 13l3.5-10h1L10 13M3.3 9.5h4.4M11.5 8.5c0-1 .7-1.8 1.7-1.8S15 7.5 15 8.5H11.5c0 1.2.8 2 1.9 2" /> },
+  { id: "blender", x: 450, y: 188, label: "Blender", icon: <Icon d="M8 14.5a4.5 4.5 0 100-9 4.5 4.5 0 000 9zM8 11.5a1.5 1.5 0 100-3 1.5 1.5 0 000 3zM3.5 10L1 6.5h5.5" /> },
+  { id: "video", x: 600, y: 188, label: "Your video", size: "lg" as const, icon: <Icon d="M5 3.5l8 4.5-8 4.5z" /> },
 ];
 const connections = [
   { from: "brief", to: "figma" },
@@ -32,16 +32,16 @@ const connections = [
 
 // Phones: the same flow stacked top to bottom, drawn at a size that doesn't need shrinking.
 const tallNodes = [
-  { ...wideNodes[0]!, x: 150, y: 50 },
-  { ...wideNodes[1]!, x: 60, y: 190 },
-  { ...wideNodes[2]!, x: 240, y: 190 },
-  { ...wideNodes[3]!, x: 150, y: 330 },
-  { ...wideNodes[4]!, x: 150, y: 460 },
+  { ...wideNodes[0]!, x: 150, y: 43 },
+  { ...wideNodes[1]!, x: 60, y: 183 },
+  { ...wideNodes[2]!, x: 240, y: 183 },
+  { ...wideNodes[3]!, x: 150, y: 323 },
+  { ...wideNodes[4]!, x: 150, y: 453 },
 ];
 
 export default function HomeIntro() {
   const compact = useMedia("(max-width: 639px)");
-  const board = compact ? { nodes: tallNodes, width: 300, height: 520 } : { nodes: wideNodes, width: 680, height: 390 };
+  const board = compact ? { nodes: tallNodes, width: 300, height: 520 } : { nodes: wideNodes, width: 680, height: 400 };
   return (
     <section className="section glow-a">
       <div className="container-site grid items-center gap-16 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)]">
