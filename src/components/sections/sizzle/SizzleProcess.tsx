@@ -6,6 +6,7 @@ import { Reveal } from "@/components/site/Motion";
 import SectionHead from "@/components/site/SectionHead";
 import { CircuitBoard } from "@/components/ui/circuit-board";
 import { cta, sizzle } from "@/lib/content";
+import { useMedia } from "@/lib/useMedia";
 
 const Icon = ({ d }: { d: string }) => (
   <svg width="18" height="18" viewBox="0 0 16 16" fill="none" aria-hidden="true">
@@ -16,7 +17,16 @@ const Icon = ({ d }: { d: string }) => (
 const icons = ["M8 1.5v9M4.5 7L8 10.5 11.5 7M2.5 14.5h11", "M5 6.5a2 2 0 100-4 2 2 0 000 4zM11 6.5a2 2 0 100-4 2 2 0 000 4zM1.5 13.5c0-2 1.6-3.5 3.5-3.5s3.5 1.5 3.5 3.5M7.5 13.5c0-2 1.6-3.5 3.5-3.5s3.5 1.5 3.5 3.5", "M2 8.5l3.5 3.5L14 3.5"];
 
 export default function SizzleProcess() {
-  const nodes = sizzle.process.map((p, i) => ({ id: p.id, x: 90 + i * 250, y: 110, label: p.title, size: "lg" as const, icon: <Icon d={icons[i]!} /> }));
+  const compact = useMedia("(max-width: 639px)");
+  const board = compact ? { width: 300, height: 400 } : { width: 680, height: 200 };
+  const nodes = sizzle.process.map((p, i) => ({
+    id: p.id,
+    x: compact ? 150 : 90 + i * 250,
+    y: compact ? 50 + i * 140 : 110,
+    label: p.title,
+    size: "lg" as const,
+    icon: <Icon d={icons[i]!} />,
+  }));
   const connections = [
     { from: "sample", to: "production" },
     { from: "production", to: "review" },
@@ -42,12 +52,12 @@ export default function SizzleProcess() {
 
         <Reveal>
           <div className="card overflow-hidden px-4 py-8 sm:px-10">
-            <ScaledBox width={680} height={200} maxScale={1.6}>
+            <ScaledBox key={board.width} width={board.width} height={board.height} maxScale={compact ? 1.1 : 1.6}>
               <CircuitBoard
                 nodes={nodes}
                 connections={connections}
-                width={680}
-                height={200}
+                width={board.width}
+                height={board.height}
                 variant="dark"
                 gridSize={20}
                 traceWidth={2}

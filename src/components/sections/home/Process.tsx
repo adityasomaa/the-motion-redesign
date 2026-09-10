@@ -21,10 +21,10 @@ export default function Process() {
           const next = cards[i + 1];
           if (!next) return;
           gsap.to(card.firstElementChild, {
-            scale: 0.9,
-            filter: "brightness(0.45)",
+            scale: 0.94,
+            filter: "brightness(0.6)",
             ease: "none",
-            scrollTrigger: { trigger: next, start: "top bottom", end: "top 30%", scrub: true },
+            scrollTrigger: { trigger: next, start: "top 75%", end: "top 25%", scrub: true },
           });
         });
       });

@@ -4,7 +4,7 @@ import Button from "@/components/site/Button";
 import LazyMount from "@/components/site/Lazy";
 import { Reveal, SplitHeading } from "@/components/site/Motion";
 import { AsciiEffect } from "@/components/ui/ascii-effect";
-import { cta, sizzle } from "@/lib/content";
+import { cta } from "@/lib/content";
 
 export default function SizzleHero() {
   return (
@@ -39,18 +39,23 @@ export default function SizzleHero() {
           <div className="relative aspect-[689/444] w-full overflow-hidden rounded-[1.5rem] border border-white/10 bg-void shadow-[0_40px_120px_-30px_rgba(226,37,255,.45)]">
             <LazyMount className="absolute inset-0" rootMargin="0px">
               <AsciiEffect
-                imageSrc={sizzle.heroImage}
-                alt="ASCII rendering of the sizzle reel artwork"
+                imageSrc="/img/posters/superodd-boundless-reel.webp"
+                alt="ASCII rendering of a frame from the Superodd sizzle reel"
                 variant="glitch"
-                colors={["#ff13bb", "#e225ff", "#5a55ff"]}
+                colors={["#ff5cc0", "#e27bff", "#9d8cff"]}
                 backgroundColor="#080610"
-                fontSize={8}
-                scale={1.05}
+                fontSize={7}
+                scale={1.08}
+                brightnessBoost={3.2}
+                contrast={1.35}
+                threshold={0.02}
+                glitchIntensity={0.45}
+                mouseStrength={30}
                 className="h-full w-full"
               />
             </LazyMount>
             <div className="pointer-events-none absolute bottom-4 left-4 flex items-center gap-3 rounded-xl border border-white/10 bg-void/70 p-2 pr-4 backdrop-blur">
-              <img src={sizzle.heroImage} alt="" className="h-10 w-16 rounded-md object-cover" />
+              <img src="/img/posters/superodd-boundless-reel.webp" alt="" className="h-10 w-16 rounded-md object-cover" />
               <span className="text-xs uppercase tracking-[0.25em] text-white/65">Move to distort</span>
             </div>
           </div>

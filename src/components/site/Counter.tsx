@@ -5,6 +5,8 @@ import { gsap, ScrollTrigger, useGSAP } from "@/lib/gsap";
 import { prefersReducedMotion } from "@/lib/utils";
 
 /** Counts up from zero when scrolled into view. The final value is in the markup, so no-JS and screen readers get it. */
+const fmt = new Intl.NumberFormat("en-US");
+
 export default function Counter({ value, suffix = "", className }: { value: number; suffix?: string; className?: string }) {
   const ref = useRef<HTMLSpanElement>(null);
   useGSAP(() => {
@@ -22,14 +24,14 @@ export default function Counter({ value, suffix = "", className }: { value: numb
           duration: 2,
           ease: "expo.out",
           onUpdate: () => {
-            el.textContent = `${Math.round(state.n)}${suffix}`;
+            el.textContent = `${fmt.format(Math.round(state.n))}${suffix}`;
           },
         }),
     });
   });
   return (
     <span ref={ref} className={className}>
-      {value}
+      {fmt.format(value)}
       {suffix}
     </span>
   );

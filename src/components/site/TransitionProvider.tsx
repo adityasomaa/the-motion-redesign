@@ -8,7 +8,7 @@ import { nextPaint, prefersReducedMotion, wait } from "@/lib/wait";
 
 const COVER_MS = 750;
 const REVEAL_MS = 900;
-const LOADER_MIN_MS = 1500;
+const LOADER_MIN_MS = 1200;
 const LOADER_MAX_MS = 3200;
 const NAV_TIMEOUT_MS = 6000;
 

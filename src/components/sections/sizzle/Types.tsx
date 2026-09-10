@@ -6,6 +6,7 @@ import { WheelCarousel } from "@/components/ui/wheel-carousel";
 import { sizzle } from "@/lib/content";
 import { gsap, useGSAP } from "@/lib/gsap";
 import { prefersReducedMotion } from "@/lib/utils";
+import { useMedia } from "@/lib/useMedia";
 
 /**
  * On desktop the page scroll turns the wheel (pinned), so the mouse wheel is never trapped.
@@ -15,6 +16,7 @@ export default function Types() {
   const root = useRef<HTMLElement>(null);
   const [active, setActive] = useState(0);
   const n = sizzle.types.length;
+  const compact = useMedia("(max-width: 767px)");
 
   useGSAP(
     () => {
@@ -77,7 +79,7 @@ export default function Types() {
           </div>
         </div>
 
-        <div className="h-[24rem] overflow-hidden rounded-[1.75rem] border border-white/10 sm:h-[30rem] lg:h-[34rem]">
+        <div className="h-[19rem] overflow-hidden rounded-[1.75rem] border border-white/10 sm:h-[30rem] lg:h-[34rem]">
           <WheelCarousel
             items={sizzle.types}
             mode="custom"
@@ -87,19 +89,21 @@ export default function Types() {
             selectedColor="#ffffff"
             markerColor="#ff0a96"
             photoSide="left"
-            photoWidth={46}
-            photoAspect="4/3"
-            photoRadius={18}
+            photoWidth={compact ? 50 : 46}
+            photoAspect={compact ? "3/4" : "4/3"}
+            photoRadius={compact ? 12 : 18}
             contentWidth={1200}
-            gap={8}
-            radius={340}
-            spacing={15}
-            visibleItems={5}
-            apexInset={22}
+            gap={compact ? 4 : 8}
+            radius={compact ? 170 : 340}
+            spacing={compact ? 20 : 15}
+            visibleItems={compact ? 3 : 5}
+            apexInset={compact ? 14 : 22}
+            markerSize={compact ? 10 : 16}
+            markerGap={compact ? 10 : 20}
             scrollSpeed={0}
             activeIndex={active}
             onActiveChange={(_, i) => setActive(i)}
-            itemClassName="text-[clamp(1rem,0.8rem+1.2vw,2rem)] font-semibold"
+            itemClassName="text-[clamp(0.95rem,0.8rem+1.2vw,2rem)] font-semibold"
             className="h-full min-h-0"
           />
         </div>

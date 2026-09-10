@@ -180,14 +180,14 @@ export function FlippingWordSwap({
     >
       <span className="col-start-1 row-start-1 inline-grid overflow-hidden [perspective:800px]">
         <span
-          className="col-start-1 row-start-1 inline-flex items-baseline justify-center gap-[0.012em] whitespace-pre"
+          className="col-start-1 row-start-1 inline-flex items-baseline justify-start gap-[0.012em] whitespace-pre"
           aria-hidden="true"
         >
           {renderCharacters(word1, "first")}
         </span>
         <span
           className={cn(
-            "col-start-1 row-start-1 inline-flex items-baseline justify-center gap-[0.012em] whitespace-pre",
+            "col-start-1 row-start-1 inline-flex items-baseline justify-start gap-[0.012em] whitespace-pre",
             toClassName,
           )}
           aria-hidden="true"
