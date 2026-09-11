@@ -65,7 +65,7 @@ export default function Process() {
                 <article className="card relative origin-top overflow-hidden bg-[linear-gradient(160deg,#1a1036,#0f0a22)] will-change-transform">
                   <div className="grid sm:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
                     <div className="flex flex-col gap-5 p-7 sm:p-9">
-                      <span className="text-[4.5rem] font-extrabold leading-none tracking-[-0.06em] text-grad">{p.step}</span>
+                      <span className="text-[4.5rem] font-extrabold leading-[1.32] tracking-[-0.06em] text-grad">{p.step}</span>
                       <span className="text-xs uppercase tracking-[0.28em] text-white/55">{p.tag}</span>
                       <h3 className="display-3">{p.title}</h3>
                       <p className="leading-relaxed text-white/72">{p.body}</p>

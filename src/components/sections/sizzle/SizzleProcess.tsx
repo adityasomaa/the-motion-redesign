@@ -18,11 +18,12 @@ const icons = ["M8 1.5v9M4.5 7L8 10.5 11.5 7M2.5 14.5h11", "M5 6.5a2 2 0 100-4 2
 
 export default function SizzleProcess() {
   const compact = useMedia("(max-width: 639px)");
-  const board = compact ? { width: 300, height: 400 } : { width: 680, height: 200 };
+  const board = compact ? { width: 300, height: 360 } : { width: 680, height: 200 };
   const nodes = sizzle.process.map((p, i) => ({
     id: p.id,
-    x: compact ? 150 : 90 + i * 250,
-    y: compact ? 53 + i * 135 : 88,
+    x: compact ? 44 : 90 + i * 250,
+    y: compact ? 60 + i * 120 : 88,
+    labelSide: compact ? ("right" as const) : ("bottom" as const),
     label: p.title,
     size: "lg" as const,
     icon: <Icon d={icons[i]!} />,
@@ -61,7 +62,7 @@ export default function SizzleProcess() {
                 variant="dark"
                 gridSize={20}
                 traceWidth={2}
-                pulseSpeed={1.8}
+                pulseSpeed={3.8}
                 traceColor="rgba(255,255,255,0.14)"
                 pulseColor="#ff13bb"
                 nodeColor="rgba(255,255,255,0.85)"
@@ -73,7 +74,7 @@ export default function SizzleProcess() {
         <Reveal as="ol" className="grid gap-5 md:grid-cols-3">
           {sizzle.process.map((p, i) => (
             <li key={p.id} data-reveal className="card spotlight flex flex-col gap-4 p-7">
-              <span className="text-5xl font-extrabold leading-none tracking-[-0.05em] text-grad">{String(i + 1).padStart(2, "0")}</span>
+              <span className="text-5xl font-extrabold leading-[1.32] tracking-[-0.05em] text-grad">{String(i + 1).padStart(2, "0")}</span>
               <h3 className="text-xl font-semibold tracking-tight">{p.title}</h3>
               <p className="leading-relaxed text-white/70">{p.body}</p>
             </li>

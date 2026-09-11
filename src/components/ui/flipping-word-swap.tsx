@@ -178,7 +178,7 @@ export function FlippingWordSwap({
       }}
       onBlur={() => updateSwap(false)}
     >
-      <span className="col-start-1 row-start-1 -mb-[0.22em] -mt-[0.06em] inline-grid overflow-hidden pb-[0.22em] pt-[0.06em] [perspective:800px]">
+      <span className="col-start-1 row-start-1 -mb-[0.26em] -mt-[0.14em] inline-grid overflow-hidden pb-[0.26em] pt-[0.14em] [perspective:800px]">
         <span
           className="col-start-1 row-start-1 inline-flex items-baseline justify-start gap-[0.012em] whitespace-pre"
           aria-hidden="true"

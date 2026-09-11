@@ -59,7 +59,7 @@ export default function HomeHero() {
         }}
       />
 
-      <div className="container-site pointer-events-none relative flex min-h-0 flex-1 flex-col gap-5 py-5 wide:grid wide:grid-cols-[minmax(0,1.3fr)_minmax(0,1fr)] wide:items-center wide:gap-10 wide:py-6">
+      <div className="container-site pointer-events-none relative flex min-h-0 flex-1 flex-col gap-5 py-5 max-md:justify-center wide:grid wide:grid-cols-[minmax(0,1.3fr)_minmax(0,1fr)] wide:items-center wide:gap-10 wide:py-6">
         <div data-hero="content" className="flex shrink-0 flex-col gap-4 sm:gap-5 wide:gap-6">
           <p data-hero="eyebrow" className="eyebrow">
             Motion graphics &amp; design agency
@@ -70,7 +70,7 @@ export default function HomeHero() {
               {words.map((w, i) => (
                 // the space sits outside the clipped box: a trailing space inside an inline-block collapses
                 <Fragment key={i}>
-                  <span className="-mb-[0.24em] -mt-[0.06em] inline-block overflow-hidden pb-[0.24em] pt-[0.06em] align-bottom">
+                  <span className="-mb-[0.26em] -mt-[0.14em] inline-block overflow-hidden pb-[0.26em] pt-[0.14em] align-bottom">
                     <span data-hero="word" className="inline-block">
                       {w}
                     </span>

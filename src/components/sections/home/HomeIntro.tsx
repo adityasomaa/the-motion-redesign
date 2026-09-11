@@ -15,33 +15,33 @@ const Icon = ({ d }: { d: string }) => (
   </svg>
 );
 
-const wideNodes = [
-  { id: "brief", x: 70, y: 188, label: "Your brief", size: "lg" as const, icon: <Icon d="M4 1.5h5l3 3v10H4zM9 1.5v3h3M6 8h4M6 11h4" /> },
-  { id: "figma", x: 260, y: 78, label: "Figma", icon: <Icon d="M6 1.5h4a2 2 0 010 4H6a2 2 0 010-4zM6 5.5h4a2 2 0 010 4H6a2 2 0 010-4zM6 9.5a2 2 0 102 2v-2" /> },
-  { id: "ae", x: 260, y: 298, label: "After Effects", icon: <Icon d="M2 13l3.5-10h1L10 13M3.3 9.5h4.4M11.5 8.5c0-1 .7-1.8 1.7-1.8S15 7.5 15 8.5H11.5c0 1.2.8 2 1.9 2" /> },
-  { id: "blender", x: 450, y: 188, label: "Blender", icon: <Icon d="M8 14.5a4.5 4.5 0 100-9 4.5 4.5 0 000 9zM8 11.5a1.5 1.5 0 100-3 1.5 1.5 0 000 3zM3.5 10L1 6.5h5.5" /> },
-  { id: "video", x: 600, y: 188, label: "Your video", size: "lg" as const, icon: <Icon d="M5 3.5l8 4.5-8 4.5z" /> },
+/* The project journey as described on the live site: brief, free sample, storyboard planning, production, delivery. */
+const steps = [
+  { id: "brief", label: "Your brief", size: "lg" as const, icon: <Icon d="M4 1.5h5l3 3v10H4zM9 1.5v3h3M6 8h4M6 11h4" /> },
+  { id: "sample", label: "Free sample", icon: <Icon d="M8 1.5l1.6 4.2 4.4.3-3.4 2.8 1.1 4.3L8 10.7l-3.7 2.4 1.1-4.3L2 6l4.4-.3z" /> },
+  { id: "storyboard", label: "Storyboard", icon: <Icon d="M1.5 3h13v10h-13zM1.5 8h13M6 3v10M10.5 3v10" /> },
+  { id: "production", label: "Production", icon: <Icon d="M2 4h12v8H2zM6.5 6v4l3.5-2z" /> },
+  { id: "delivery", label: "Final delivery", size: "lg" as const, icon: <Icon d="M3 8.5l3.5 3.5L13 4.5" /> },
 ];
-const connections = [
-  { from: "brief", to: "figma" },
-  { from: "brief", to: "ae" },
-  { from: "figma", to: "blender" },
-  { from: "ae", to: "blender" },
-  { from: "blender", to: "video", bidirectional: true },
-];
+const connections = steps.slice(1).map((s, i) => ({ from: steps[i]!.id, to: s.id }));
 
-// Phones: the same flow stacked top to bottom, drawn at a size that doesn't need shrinking.
-const tallNodes = [
-  { ...wideNodes[0]!, x: 150, y: 43 },
-  { ...wideNodes[1]!, x: 60, y: 183 },
-  { ...wideNodes[2]!, x: 240, y: 183 },
-  { ...wideNodes[3]!, x: 150, y: 323 },
-  { ...wideNodes[4]!, x: 150, y: 453 },
+// Laptop and tablet: a zigzag down a central spine. Every trace, and every pulse, runs downward.
+const wide = [
+  { x: 140, y: 44 },
+  { x: 540, y: 138 },
+  { x: 140, y: 232 },
+  { x: 540, y: 326 },
+  { x: 340, y: 412 },
 ];
+// Phone: one straight line top to bottom, labels beside the nodes so the trace never runs through text.
+const tall = steps.map((_, i) => ({ x: 44, y: 44 + i * 98 }));
 
 export default function HomeIntro() {
   const compact = useMedia("(max-width: 639px)");
-  const board = compact ? { nodes: tallNodes, width: 300, height: 520 } : { nodes: wideNodes, width: 680, height: 400 };
+  const layout = compact ? tall : wide;
+  const nodes = steps.map((s, i) => ({ ...s, ...layout[i]!, labelSide: compact ? ("right" as const) : ("bottom" as const) }));
+  const board = compact ? { width: 300, height: 480 } : { width: 680, height: 480 };
+
   return (
     <section className="section glow-a">
       <div className="container-site grid items-center gap-16 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)]">
@@ -74,23 +74,23 @@ export default function HomeIntro() {
 
         <Reveal>
           <figure className="card overflow-hidden p-5 sm:p-8">
-            <ScaledBox key={board.width} width={board.width} height={board.height} maxScale={compact ? 1.15 : 1.25}>
+            <ScaledBox key={board.width} width={board.width} height={board.height} maxScale={compact ? 1.15 : 1.2}>
               <CircuitBoard
-                nodes={board.nodes}
+                nodes={nodes}
                 connections={connections}
                 width={board.width}
                 height={board.height}
                 variant="dark"
                 gridSize={22}
                 traceWidth={2}
-                pulseSpeed={2.4}
+                pulseSpeed={4.2}
                 traceColor="rgba(255,255,255,0.14)"
                 pulseColor="#ff13bb"
                 nodeColor="rgba(255,255,255,0.82)"
               />
             </ScaledBox>
             <figcaption className="mt-6 border-t border-white/10 pt-5 text-sm text-white/65">
-              Figma, After Effects and Blender: the tools behind every brief we turn into video.
+              From your brief to final delivery: every project starts with a free sample, then storyboard planning, then production.
             </figcaption>
           </figure>
         </Reveal>

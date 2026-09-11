@@ -85,7 +85,7 @@ export default function Benefits() {
             data-benefit
             className="card flex w-[80vw] max-w-[26rem] shrink-0 snap-start flex-col justify-between gap-10 overflow-hidden p-7 sm:w-[24rem] lg:h-[24rem]"
           >
-            <span data-benefit-num className="text-[5rem] font-extrabold leading-none tracking-[-0.06em] text-grad">
+            <span data-benefit-num className="text-[5rem] font-extrabold leading-[1.32] tracking-[-0.06em] text-grad">
               {String(i + 1).padStart(2, "0")}
             </span>
             <div className="flex flex-col gap-3">

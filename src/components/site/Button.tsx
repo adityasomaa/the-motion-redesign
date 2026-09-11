@@ -53,7 +53,7 @@ export default function Button({ children, href, variant = "primary", size = "md
           className="absolute inset-0 -z-10 translate-y-full rounded-full bg-[linear-gradient(100deg,#ff13bb,#a31bd6)] transition-transform duration-500 ease-[var(--ease-expo)] group-hover:translate-y-0"
         />
       )}
-      <span aria-hidden="true" className="relative inline-flex overflow-hidden leading-[1.25]">
+      <span aria-hidden="true" className="relative inline-flex overflow-hidden leading-[1.45]">
         {letters.map((ch, i) => (
           <span
             key={i}

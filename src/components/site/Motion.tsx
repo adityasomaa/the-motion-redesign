@@ -43,8 +43,8 @@ export function SplitHeading({
         if (cancelled) return;
         split = SplitText.create(el, { type: "words", mask: "words", wordsClass: "split-word" });
         (split as unknown as { masks?: HTMLElement[] }).masks?.forEach((m) => {
-          m.style.paddingTop = "0.08em";
-          m.style.marginTop = "-0.08em";
+          m.style.paddingTop = "0.14em";
+          m.style.marginTop = "-0.14em";
           m.style.paddingBottom = "0.22em";
           m.style.marginBottom = "-0.22em";
         });
@@ -54,6 +54,11 @@ export function SplitHeading({
           const left = g.getBoundingClientRect().left;
           g.classList.remove("text-grad");
           g.querySelectorAll<HTMLElement>(".split-word").forEach((w) => {
+            // background-clip:text only paints inside the word's box; pad it so descenders get the gradient too
+            w.style.paddingTop = "0.16em";
+            w.style.marginTop = "-0.16em";
+            w.style.paddingBottom = "0.22em";
+            w.style.marginBottom = "-0.22em";
             w.classList.add("text-grad");
             w.style.backgroundSize = `${width}px 100%`;
             w.style.backgroundPosition = `${left - w.getBoundingClientRect().left}px 0`;

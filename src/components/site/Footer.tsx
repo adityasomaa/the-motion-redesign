@@ -29,17 +29,43 @@ export default function Footer() {
   const bigRef = useRef<HTMLParagraphElement>(null);
 
   useGSAP(() => {
-    if (!bigRef.current || prefersReducedMotion()) return;
-    const split = SplitText.create(bigRef.current, { type: "chars", charsClass: "inline-block will-change-transform" });
-    gsap.from(split.chars, {
-      yPercent: 135,
-      rotate: 8,
-      opacity: 0,
-      stagger: 0.03,
-      duration: 1.2,
-      scrollTrigger: { trigger: bigRef.current, start: "top 95%", end: "bottom 80%", scrub: 0.8 },
+    const el = bigRef.current;
+    if (!el) return;
+    let split: SplitText | null = null;
+    let cancelled = false;
+    document.fonts.ready.then(() => {
+      if (cancelled) return;
+      split = SplitText.create(el, { type: "chars", charsClass: "inline-block will-change-transform" });
+      const chars = split.chars as HTMLElement[];
+      // A gradient clipped to the paragraph disappears once its letters are transformed individually,
+      // so each letter carries its own slice of one continuous gradient, padded to cover descenders.
+      const rects = chars.map((c) => c.getBoundingClientRect());
+      const left = Math.min(...rects.map((r) => r.left));
+      const right = Math.max(...rects.map((r) => r.right));
+      el.classList.remove("text-grad");
+      chars.forEach((c, i) => {
+        c.classList.add("text-grad");
+        c.style.backgroundSize = `${right - left}px 100%`;
+        c.style.backgroundPosition = `${left - rects[i]!.left}px 0`;
+        c.style.paddingTop = "0.24em";
+        c.style.marginTop = "-0.24em";
+        c.style.paddingBottom = "0.24em";
+        c.style.marginBottom = "-0.24em";
+      });
+      if (prefersReducedMotion()) return;
+      gsap.from(chars, {
+        yPercent: 135,
+        rotate: 8,
+        opacity: 0,
+        stagger: 0.03,
+        duration: 1.2,
+        scrollTrigger: { trigger: el, start: "top 95%", end: "bottom 80%", scrub: 0.8 },
+      });
     });
-    return () => split.revert();
+    return () => {
+      cancelled = true;
+      split?.revert();
+    };
   });
 
   return (
@@ -119,7 +145,9 @@ export default function Footer() {
         <p
           ref={bigRef}
           aria-hidden="true"
-          className="mt-24 select-none overflow-hidden whitespace-nowrap pb-[0.22em] text-center text-[clamp(2.75rem,11.5vw,11rem)] font-extrabold leading-[0.9] tracking-[-0.05em] text-grad"
+          className="mt-24 select-none overflow-hidden whitespace-nowrap pb-[0.26em] pt-[0.22em] text-center font-extrabold leading-[0.9] tracking-[-0.05em] text-grad"
+          // sized to the container, so the whole line always fits on one row
+          style={{ fontSize: "min(calc((100vw - 2 * var(--gutter)) / 10.4), calc((90rem - 2 * var(--gutter)) / 10.4))" }}
         >
           Make your brand move
         </p>

@@ -12,6 +12,7 @@ interface CircuitNode {
   icon?: React.ReactNode
   status?: "active" | "inactive" | "processing" | "error"
   size?: "sm" | "md" | "lg"
+  labelSide?: "bottom" | "right"
 }
 
 interface CircuitConnection {
@@ -364,7 +365,10 @@ function CircuitBoard({
             {/* Label */}
             {node.label && (
               <div
-                className="absolute -bottom-6 left-1/2 -translate-x-1/2 whitespace-nowrap text-xs font-medium"
+                className={cn(
+                  "absolute whitespace-nowrap text-xs font-medium",
+                  node.labelSide === "right" ? "left-full top-1/2 ml-3 -translate-y-1/2" : "-bottom-6 left-1/2 -translate-x-1/2"
+                )}
                 style={{ color: statusColor }}
               >
                 {node.label}
